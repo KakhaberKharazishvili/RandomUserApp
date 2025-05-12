@@ -15,7 +15,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.randomuserapp.R
 import com.example.randomuserapp.data.db.AppDatabase
 import com.example.randomuserapp.data.db.UserEntity
-import com.example.randomuserapp.repository.UserRepository
+import com.example.randomuserapp.repository.UserRepositoryImpl
 import com.example.randomuserapp.viewmodel.UserViewModel
 import com.example.randomuserapp.viewmodel.UserViewModelFactory
 
@@ -65,7 +65,7 @@ fun UserList(users: List<UserEntity>) {
 fun provideUserViewModel(context: Context): UserViewModel {
     val factory = remember(context) {
         val db = AppDatabase.getDatabase(context)
-        val repository = UserRepository(db.userDao())
+        val repository = UserRepositoryImpl(db.userDao())
         UserViewModelFactory(repository)
     }
     return viewModel(factory = factory)
