@@ -3,7 +3,7 @@ package com.example.randomuserapp.ui.screen
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -48,7 +48,7 @@ fun MainScreen() {
 @Composable
 fun UserList(users: List<UserEntity>) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(users, key = {it.email}) { user ->
+        itemsIndexed(users, key = { index, user -> "${user.id}_$index" }) { _, user ->
             Text(
                 text = "${user.firstName} ${user.lastName}",
                 style = MaterialTheme.typography.bodyLarge,
