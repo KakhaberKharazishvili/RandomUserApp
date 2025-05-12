@@ -5,7 +5,7 @@ import com.example.randomuserapp.data.api.RetrofitInstance
 import com.example.randomuserapp.data.db.UserDao
 import com.example.randomuserapp.data.db.UserEntity
 
-class UserRepository(private val userDao: UserDao) : IUserRepository {
+class UserRepository(private val userDao: UserDao) : UserRepositoryContract {
 
     override suspend fun getUsers(): List<UserEntity> {
         return try {

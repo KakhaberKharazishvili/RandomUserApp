@@ -2,6 +2,6 @@ package com.example.randomuserapp.repository
 
 import com.example.randomuserapp.data.db.UserEntity
 
-interface IUserRepository {
+interface UserRepositoryContract {
     suspend fun getUsers(): List<UserEntity>
 }
