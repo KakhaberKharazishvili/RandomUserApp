@@ -7,7 +7,10 @@ data class UserResponse(
 data class UserDto(
     val name: NameDto,
     val email: String,
-    val picture: PictureDto
+    val picture: PictureDto,
+    val dob: DobDto,
+    val location: LocationDto,
+    val phone: String
 )
 
 data class NameDto(
@@ -17,4 +20,20 @@ data class NameDto(
 
 data class PictureDto(
     val large: String
+)
+
+data class DobDto(
+    val date: String,
+    val age: Int
+)
+
+data class LocationDto(
+    val street: StreetDto,
+    val city: String,
+    val country: String
+)
+
+data class StreetDto(
+    val number: Int,
+    val name: String
 )

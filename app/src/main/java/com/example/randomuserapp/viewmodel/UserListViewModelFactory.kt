@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.randomuserapp.repository.UserRepositoryImpl
 
-class UserViewModelFactory(private val repository: UserRepositoryImpl) : ViewModelProvider.Factory {
+class UserListViewModelFactory(private val repository: UserRepositoryImpl) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(UserViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(UserListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return UserViewModel(repository) as T
+            return UserListViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

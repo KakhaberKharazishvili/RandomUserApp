@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">RandomUserApp</string>
     <string name="app_title">Random Users</string>
+    <string name="label_dob">Дата рождения: %1$s</string>
+    <string name="label_age">Возраст: %1$d</string>
+    <string name="label_address">Адрес: %1$s</string>
+    <string name="label_phone">Телефон: %1$s</string>
+    <string name="label_email">Email: %1$s</string>
 </resources>

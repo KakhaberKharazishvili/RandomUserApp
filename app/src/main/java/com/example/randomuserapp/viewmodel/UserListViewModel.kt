@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class UserViewModel(private val repository: UserRepositoryImpl) : ViewModel() {
+class UserListViewModel(private val repository: UserRepositoryImpl) : ViewModel() {
 
     private val _userList = MutableStateFlow<PersistentList<UserEntity>>(persistentListOf())
     val userList = _userList.asStateFlow()

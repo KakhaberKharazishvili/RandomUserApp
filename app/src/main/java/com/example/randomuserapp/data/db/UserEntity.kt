@@ -18,5 +18,23 @@ data class UserEntity(
     val email: String,
 
     @ColumnInfo(name = "avatar_url")
-    val avatarUrl: String
+    val avatarUrl: String,
+
+    @ColumnInfo(name = "birth_date")
+    val birthDate: String,
+
+    @ColumnInfo(name = "age")
+    val age: Int,
+
+    @ColumnInfo(name = "street")
+    val street: String,
+
+    @ColumnInfo(name = "city")
+    val city: String,
+
+    @ColumnInfo(name = "country")
+    val country: String,
+
+    @ColumnInfo(name = "phone")
+    val phone: String
 )
