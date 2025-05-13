@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.randomuserapp.data.navigation.Screen
 import com.example.randomuserapp.ui.screen.UserListScreen
 import com.example.randomuserapp.ui.screen.UserDetailScreen
 import com.example.randomuserapp.ui.theme.RandomUserAppTheme
@@ -31,18 +32,18 @@ fun RandomUserApp() {
 
     NavHost(
         navController = navController,
-        startDestination = "user_list"
+        startDestination = Screen.UserList.route
     ) {
-        composable("user_list") {
+        composable(route = Screen.UserList.route) {
             UserListScreen(onUserClick = { userId ->
-                navController.navigate("user_detail/$userId")
+                navController.navigate(route = Screen.UserDetail.createRoute(userId.toInt()))
             })
         }
         composable(
-            route = "user_detail/{userId}",
-            arguments = listOf(navArgument("userId") { type = NavType.StringType })
+            route = Screen.UserDetail.route,
+            arguments = listOf(navArgument("userId") { type = NavType.IntType })
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            val userId = backStackEntry.arguments?.getInt("userId") ?: return@composable
             UserDetailScreen(userId = userId)
         }
     }

@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.randomuserapp.R
-import com.example.randomuserapp.data.db.AppDatabase
 import com.example.randomuserapp.data.db.UserEntity
-import com.example.randomuserapp.repository.UserRepositoryImpl
+import com.example.randomuserapp.repository.UserRepositoryProvider
 import com.example.randomuserapp.viewmodel.UserListViewModel
 import com.example.randomuserapp.viewmodel.UserListViewModelFactory
 
@@ -25,8 +25,8 @@ import com.example.randomuserapp.viewmodel.UserListViewModelFactory
 fun UserListScreen(onUserClick: (String) -> Unit) {
     val context = LocalContext.current
     val viewModel = provideUserViewModel(context)
-    val users by viewModel.userList.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    val users by viewModel.userList.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -69,8 +69,7 @@ fun UserList(
 @Composable
 fun provideUserViewModel(context: Context): UserListViewModel {
     val factory = remember(context) {
-        val db = AppDatabase.getDatabase(context)
-        val repository = UserRepositoryImpl(db.userDao())
+        val repository = UserRepositoryProvider.getRepository(context)
         UserListViewModelFactory(repository)
     }
     return viewModel(factory = factory)
