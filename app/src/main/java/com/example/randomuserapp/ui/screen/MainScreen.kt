@@ -3,17 +3,19 @@ package com.example.randomuserapp.ui.screen
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.randomuserapp.R
 import com.example.randomuserapp.data.db.AppDatabase
 import com.example.randomuserapp.data.db.UserEntity
-import com.example.randomuserapp.repository.UserRepository
+import com.example.randomuserapp.repository.UserRepositoryImpl
 import com.example.randomuserapp.viewmodel.UserViewModel
 import com.example.randomuserapp.viewmodel.UserViewModelFactory
 
@@ -27,7 +29,7 @@ fun MainScreen() {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Random Users") })
+            TopAppBar(title = { Text(stringResource(R.string.app_title)) })
         }
     ) { padding ->
         Box(modifier = Modifier
@@ -46,7 +48,7 @@ fun MainScreen() {
 @Composable
 fun UserList(users: List<UserEntity>) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(users) { user ->
+        itemsIndexed(users, key = { index, user -> "${user.id}_$index" }) { _, user ->
             Text(
                 text = "${user.firstName} ${user.lastName}",
                 style = MaterialTheme.typography.bodyLarge,
@@ -54,15 +56,17 @@ fun UserList(users: List<UserEntity>) {
                     .padding(16.dp)
                     .fillMaxWidth()
             )
-            Divider()
+            HorizontalDivider()
         }
     }
 }
 
 @Composable
 fun provideUserViewModel(context: Context): UserViewModel {
-    val db = remember { AppDatabase.getDatabase(context) }
-    val repository = remember { UserRepository(db.userDao()) }
-    val factory = remember { UserViewModelFactory(repository) }
+    val factory = remember(context) {
+        val db = AppDatabase.getDatabase(context)
+        val repository = UserRepositoryImpl(db.userDao())
+        UserViewModelFactory(repository)
+    }
     return viewModel(factory = factory)
 }
