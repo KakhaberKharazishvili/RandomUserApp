@@ -17,7 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.randomuserapp.R
 import com.example.randomuserapp.data.db.UserEntity
-import com.example.randomuserapp.repository.UserRepositoryProvider
+import com.example.randomuserapp.repository.UserRepository
 import com.example.randomuserapp.viewmodel.UserDetailViewModel
 import com.example.randomuserapp.viewmodel.UserDetailViewModelFactory
 
@@ -76,7 +76,7 @@ fun Content(user: UserEntity?) {
 @Composable
 fun provideUserDetailViewModel(context: Context, userId: Int): UserDetailViewModel {
     val factory = remember(context, userId) {
-        val repository = UserRepositoryProvider.getRepository(context)
+        val repository = UserRepository.getInstance(context)
         UserDetailViewModelFactory(repository, userId)
     }
     return viewModel(factory = factory)

@@ -16,7 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.randomuserapp.R
 import com.example.randomuserapp.data.db.UserEntity
-import com.example.randomuserapp.repository.UserRepositoryProvider
+import com.example.randomuserapp.repository.UserRepository
 import com.example.randomuserapp.viewmodel.UserListViewModel
 import com.example.randomuserapp.viewmodel.UserListViewModelFactory
 
@@ -69,7 +69,7 @@ fun UserList(
 @Composable
 fun provideUserViewModel(context: Context): UserListViewModel {
     val factory = remember(context) {
-        val repository = UserRepositoryProvider.getRepository(context)
+        val repository = UserRepository.getInstance(context)
         UserListViewModelFactory(repository)
     }
     return viewModel(factory = factory)
