@@ -7,9 +7,9 @@ import com.example.randomuserapp.data.db.UserEntity
 
 class UserRepositoryImpl(private val userDao: UserDao) : UserRepository {
 
-    override suspend fun getUsers(): List<UserEntity> {
+    override suspend fun getUsers(page: Int): List<UserEntity> {
         return try {
-            val response = RetrofitInstance.api.getUsers()
+            val response = RetrofitInstance.api.getUsers(page = page)
             val users = response.results.map {
                 UserEntity(
                     firstName = it.name.first,
@@ -25,8 +25,6 @@ class UserRepositoryImpl(private val userDao: UserDao) : UserRepository {
                 )
             }
 
-
-            userDao.deleteAllUsers()
             userDao.insertUsers(users)
 
             return userDao.getAllUsers()

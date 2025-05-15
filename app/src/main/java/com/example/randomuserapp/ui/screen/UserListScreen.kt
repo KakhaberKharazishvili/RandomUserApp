@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,7 +23,7 @@ import com.example.randomuserapp.viewmodel.UserListViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserListScreen(onUserClick: (String) -> Unit) {
+fun UserListScreen(onUserClick: (String) -> Unit, ) {
     val context = LocalContext.current
     val viewModel = provideUserViewModel(context)
     val users by viewModel.userList.collectAsStateWithLifecycle()
@@ -37,21 +38,29 @@ fun UserListScreen(onUserClick: (String) -> Unit) {
             .fillMaxSize()
             .padding(padding)) {
 
-            if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else {
-                UserList(users = users, onUserClick = onUserClick)
+            UserList(
+                users = users,
+                isLoading = isLoading,
+                onUserClick = onUserClick,
+                onEndReached = { viewModel.loadNextPage() } )
             }
         }
     }
-}
+
 
 @Composable
 fun UserList(
     users: List<UserEntity>,
-    onUserClick: (String) -> Unit
+    isLoading: Boolean,
+    onUserClick: (String) -> Unit,
+    onEndReached: () -> Unit
 ) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    val listState = rememberLazyListState()
+
+    LazyColumn(
+        state = listState,
+        modifier = Modifier.fillMaxSize()
+    ) {
         itemsIndexed(users, key = { index, user -> "${user.id}_$index" }) { _, user ->
             Text(
                 text = "${user.firstName} ${user.lastName}",
@@ -63,8 +72,36 @@ fun UserList(
             )
             HorizontalDivider()
         }
+
+        if (isLoading) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+        }
+    }
+
+    val shouldLoadMore = remember {
+        derivedStateOf {
+            val layoutInfo = listState.layoutInfo
+            val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem != null && lastVisibleItem.index >= users.size - 5
+        }
+    }
+
+    LaunchedEffect(shouldLoadMore.value) {
+        if (shouldLoadMore.value && !isLoading) {
+            onEndReached()
+        }
     }
 }
+
 
 @Composable
 fun provideUserViewModel(context: Context): UserListViewModel {

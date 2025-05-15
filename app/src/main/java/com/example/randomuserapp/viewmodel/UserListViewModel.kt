@@ -21,15 +21,28 @@ class UserListViewModel(private val repository: UserRepository) : ViewModel() {
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
 
+    private var currentPage = 1
+    private var isLoadingPage = false
+
     init {
-        loadUsers()
+        loadNextPage()
     }
 
-    private fun loadUsers() {
+    fun loadNextPage() {
+        if (isLoadingPage) return
+        isLoadingPage = true
+        _isLoading.update { true }
+
         viewModelScope.launch(Dispatchers.IO) {
-            _isLoading.update { true }
-            _userList.update { repository.getUsers().toPersistentList() }
+            val newUsers = repository.getUsers(currentPage)
+
+            _userList.update { currentList ->
+                (currentList + newUsers).toPersistentList()
+            }
+        }
+
+            currentPage++
             _isLoading.update { false }
+            isLoadingPage = false
         }
     }
-}

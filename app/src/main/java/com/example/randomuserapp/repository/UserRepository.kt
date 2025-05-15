@@ -5,7 +5,7 @@ import com.example.randomuserapp.data.db.AppDatabase
 import com.example.randomuserapp.data.db.UserEntity
 
 interface UserRepository {
-    suspend fun getUsers(): List<UserEntity>
+    suspend fun getUsers(page: Int): List<UserEntity>
     suspend fun getUserById(id: Int): UserEntity?
 
     companion object {
