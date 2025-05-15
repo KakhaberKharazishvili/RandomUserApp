@@ -31,13 +31,11 @@ fun UserDetailScreen(userId: Int) {
     Scaffold(
         topBar = {
             TopAppBar(title = { Text(stringResource(id = R.string.details_title)) })
-        }
-    ) { padding ->
+        }) { padding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            contentAlignment = Alignment.Center
+                .padding(padding), contentAlignment = Alignment.Center
         ) {
             Content(user)
         }
@@ -62,11 +60,17 @@ fun Content(user: UserEntity?) {
                 modifier = Modifier.size(128.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("${user.firstName} ${user.lastName}", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Text(
+                "${user.firstName} ${user.lastName}", fontSize = 20.sp, fontWeight = FontWeight.Bold
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = stringResource(R.string.label_dob, user.birthDate))
             Text(text = stringResource(R.string.label_age, user.age))
-            Text(text = stringResource(R.string.label_address, "${user.street}, ${user.city}, ${user.country}"))
+            Text(
+                text = stringResource(
+                    R.string.label_address, "${user.street}, ${user.city}, ${user.country}"
+                )
+            )
             Text(text = stringResource(R.string.label_phone, user.phone))
             Text(text = stringResource(R.string.label_email, user.email))
         }

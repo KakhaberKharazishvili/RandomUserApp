@@ -1,4 +1,4 @@
-package com.example.randomuserapp.navigation
+package com.example.randomuserapp.data.navigation
 
 import kotlinx.serialization.Serializable
 

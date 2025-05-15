@@ -10,8 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class UserDetailViewModel(
-    private val repository: UserRepository,
-    private val userId: Int
+    private val repository: UserRepository, private val userId: Int
 ) : ViewModel() {
 
     private val _user = MutableStateFlow<UserEntity?>(null)

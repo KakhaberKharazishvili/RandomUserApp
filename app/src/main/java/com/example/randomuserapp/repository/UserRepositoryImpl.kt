@@ -10,29 +10,31 @@ class UserRepositoryImpl(private val userDao: UserDao) : UserRepository {
     override suspend fun getUsers(page: Int): List<UserEntity> {
         return try {
             val response = RetrofitInstance.api.getUsers(page = page)
-            val users = response.results.map {
+            val users = response.results.mapIndexed { index, dto ->
                 UserEntity(
-                    firstName = it.name.first,
-                    lastName = it.name.last,
-                    email = it.email,
-                    avatarUrl = it.picture.large,
-                    birthDate = it.dob.date.substring(0, 10),
-                    age = it.dob.age,
-                    street = "${it.location.street.number} ${it.location.street.name}",
-                    city = it.location.city,
-                    country = it.location.country,
-                    phone = it.phone
+                    id = (page - 1) * 20 + index + 1,
+                    firstName = dto.name.first,
+                    lastName = dto.name.last,
+                    email = dto.email,
+                    avatarUrl = dto.picture.large,
+                    birthDate = dto.dob.date.substring(0, 10),
+                    age = dto.dob.age,
+                    street = "${dto.location.street.number} ${dto.location.street.name}",
+                    city = dto.location.city,
+                    country = dto.location.country,
+                    phone = dto.phone
                 )
             }
 
             userDao.insertUsers(users)
 
-            return userDao.getAllUsers()
+            users
         } catch (e: Exception) {
             Log.e("UserRepository", "Ошибка при получении пользователей", e)
             userDao.getAllUsers()
         }
     }
+
     override suspend fun getUserById(id: Int): UserEntity? {
         val user = userDao.getUserById(id)
         return user

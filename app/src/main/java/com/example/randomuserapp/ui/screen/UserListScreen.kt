@@ -23,7 +23,7 @@ import com.example.randomuserapp.viewmodel.UserListViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserListScreen(onUserClick: (String) -> Unit, ) {
+fun UserListScreen(onUserClick: (String) -> Unit) {
     val context = LocalContext.current
     val viewModel = provideUserViewModel(context)
     val users by viewModel.userList.collectAsStateWithLifecycle()
@@ -32,20 +32,21 @@ fun UserListScreen(onUserClick: (String) -> Unit, ) {
     Scaffold(
         topBar = {
             TopAppBar(title = { Text(stringResource(R.string.app_title)) })
-        }
-    ) { padding ->
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)) {
+        }) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
 
             UserList(
                 users = users,
                 isLoading = isLoading,
                 onUserClick = onUserClick,
-                onEndReached = { viewModel.loadNextPage() } )
-            }
+                onEndReached = { viewModel.loadNextPage() })
         }
     }
+}
 
 
 @Composable
@@ -58,18 +59,21 @@ fun UserList(
     val listState = rememberLazyListState()
 
     LazyColumn(
-        state = listState,
-        modifier = Modifier.fillMaxSize()
+        state = listState, modifier = Modifier.fillMaxSize()
     ) {
-        itemsIndexed(users, key = { index, user -> "${user.id}_$index" }) { _, user ->
+        itemsIndexed(users, key = { index, user -> "${user.id}_$index" }) { index, user ->
             Text(
                 text = "${user.firstName} ${user.lastName}",
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
-                    .clickable { onUserClick(user.id.toString()) }
-            )
+                    .clickable { onUserClick(user.id.toString()) })
+            LaunchedEffect(index) {
+                if (index == users.size - 5) {
+                    onEndReached()
+                }
+            }
             HorizontalDivider()
         }
 
@@ -86,22 +90,7 @@ fun UserList(
             }
         }
     }
-
-    val shouldLoadMore = remember {
-        derivedStateOf {
-            val layoutInfo = listState.layoutInfo
-            val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()
-            lastVisibleItem != null && lastVisibleItem.index >= users.size - 5
-        }
-    }
-
-    LaunchedEffect(shouldLoadMore.value) {
-        if (shouldLoadMore.value && !isLoading) {
-            onEndReached()
-        }
-    }
 }
-
 
 @Composable
 fun provideUserViewModel(context: Context): UserListViewModel {
