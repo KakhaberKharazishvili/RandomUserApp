@@ -26,7 +26,8 @@ import com.example.randomuserapp.viewmodel.UserDetailViewModelFactory
 fun UserDetailScreen(userId: Int) {
     val context = LocalContext.current
     val viewModel = provideUserDetailViewModel(context, userId)
-    val user by viewModel.user.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val user = state.user
 
     Scaffold(
         topBar = {

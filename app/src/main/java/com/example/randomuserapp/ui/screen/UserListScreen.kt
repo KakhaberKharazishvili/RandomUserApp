@@ -26,8 +26,10 @@ import com.example.randomuserapp.viewmodel.UserListViewModelFactory
 fun UserListScreen(onUserClick: (String) -> Unit) {
     val context = LocalContext.current
     val viewModel = provideUserViewModel(context)
-    val users by viewModel.userList.collectAsStateWithLifecycle()
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val users = state.users
+    val isLoading = state.isLoading
+
 
     Scaffold(
         topBar = {
