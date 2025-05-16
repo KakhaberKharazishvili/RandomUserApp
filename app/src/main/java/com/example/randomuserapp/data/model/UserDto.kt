@@ -14,8 +14,7 @@ data class UserDto(
 )
 
 data class NameDto(
-    val first: String,
-    val last: String
+    val first: String, val last: String
 )
 
 data class PictureDto(
@@ -23,17 +22,13 @@ data class PictureDto(
 )
 
 data class DobDto(
-    val date: String,
-    val age: Int
+    val date: String, val age: Int
 )
 
 data class LocationDto(
-    val street: StreetDto,
-    val city: String,
-    val country: String
+    val street: StreetDto, val city: String, val country: String
 )
 
 data class StreetDto(
-    val number: Int,
-    val name: String
+    val number: Int, val name: String
 )

@@ -28,8 +28,7 @@ android {
             isMinifyEnabled = false
             buildConfigField("String", "BASE_URL", "\"https://randomuser.me/\"")
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }

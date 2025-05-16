@@ -6,10 +6,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
     val api: RandomUserApiService by lazy {
-        Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create()).build()
             .create(RandomUserApiService::class.java)
     }
 }
