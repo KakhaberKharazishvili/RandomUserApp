@@ -15,7 +15,7 @@ interface UserRepository {
         fun getInstance(context: Context): UserRepository {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: UserRepositoryImpl(
-                    AppDatabase.getDatabase(context).userDao()
+                    AppDatabase.getDatabase(context).userDao(), context
                 ).also { INSTANCE = it }
             }
         }
