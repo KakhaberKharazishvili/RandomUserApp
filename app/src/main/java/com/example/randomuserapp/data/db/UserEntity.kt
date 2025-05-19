@@ -26,5 +26,5 @@ data class UserEntity(
 
     @ColumnInfo(name = "country") val country: String,
 
-    @ColumnInfo(name = "phone") val phone: String
+    @ColumnInfo(name = "phone") val phone: String,
 )

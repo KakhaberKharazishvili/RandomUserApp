@@ -5,7 +5,10 @@ import com.example.randomuserapp.data.api.RetrofitInstance
 import com.example.randomuserapp.data.db.UserDao
 import com.example.randomuserapp.data.db.UserEntity
 
-class UserRepositoryImpl(private val userDao: UserDao) : UserRepository {
+class UserRepositoryImpl(
+    private val userDao: UserDao
+) : UserRepository {
+
 
     override suspend fun getUsers(page: Int): List<UserEntity> {
         return try {
@@ -26,20 +29,20 @@ class UserRepositoryImpl(private val userDao: UserDao) : UserRepository {
                 )
             }
 
-            userDao.insertUsers(users)
+            if (page == 1) {
+                userDao.deleteAllUsers()
+            }
 
+            userDao.insertUsers(users)
             users
         } catch (e: Exception) {
             Log.e("UserRepository", "Ошибка при получении пользователей", e)
-            userDao.getAllUsers()
+            val offset = (page - 1) * 20
+            userDao.getUsersPaginated(limit = 20, offset = offset)
         }
     }
 
     override suspend fun getUserById(id: Int): UserEntity? {
-        val user = userDao.getUserById(id)
-        return user
+        return userDao.getUserById(id)
     }
 }
-
-
-
