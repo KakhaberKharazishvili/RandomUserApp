@@ -13,6 +13,6 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE id = :id LIMIT 1")
     suspend fun getUserById(id: Int): UserEntity?
 
-    @Query("SELECT * FROM users WHERE session_id = :sessionId LIMIT :limit OFFSET :offset")
-    suspend fun getUsersBySession(sessionId: String, limit: Int, offset: Int): List<UserEntity>
+    @Query("SELECT * FROM users LIMIT :limit OFFSET :offset")
+    suspend fun getUsersPaginated(limit: Int, offset: Int): List<UserEntity>
 }
