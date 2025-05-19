@@ -1,7 +1,6 @@
 package com.example.randomuserapp.repository
 
 import android.content.Context
-import com.example.randomuserapp.data.db.AppDatabase
 import com.example.randomuserapp.data.db.UserEntity
 
 interface UserRepository {
@@ -14,9 +13,23 @@ interface UserRepository {
 
         fun getInstance(context: Context): UserRepository {
             return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: UserRepositoryImpl(
-                    AppDatabase.getDatabase(context).userDao()
-                ).also { INSTANCE = it }
+                INSTANCE ?: run {
+                    val db = com.example.randomuserapp.data.db.AppDatabase.getDatabase(context)
+                    val userDao = db.userDao()
+
+                    val localDataSource =
+                        com.example.randomuserapp.repository.datasource.LocalUserDataSource(
+                            userDao
+                        )
+                    val remoteDataSource =
+                        com.example.randomuserapp.repository.datasource.RemoteUserDataSource(
+                            com.example.randomuserapp.data.api.RetrofitInstance.api
+                        )
+
+                    UserRepositoryImpl(remoteDataSource, localDataSource).also {
+                        INSTANCE = it
+                    }
+                }
             }
         }
     }
