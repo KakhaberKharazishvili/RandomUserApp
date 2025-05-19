@@ -9,7 +9,6 @@ class UserRepositoryImpl(
     private val userDao: UserDao
 ) : UserRepository {
 
-    private var hasClearedCache = false
 
     override suspend fun getUsers(page: Int): List<UserEntity> {
         return try {
@@ -30,9 +29,8 @@ class UserRepositoryImpl(
                 )
             }
 
-            if (!hasClearedCache && page == 1) {
+            if (page == 1) {
                 userDao.deleteAllUsers()
-                hasClearedCache = true
             }
 
             userDao.insertUsers(users)
