@@ -21,7 +21,7 @@ class LocalUserDataSource(
         userDao.deleteAllUsers()
     }
 
-    suspend fun insertUsers(users: List<UserEntity>) {
+    override suspend fun insertUsers(users: List<UserEntity>) {
         userDao.insertUsers(users)
     }
 }

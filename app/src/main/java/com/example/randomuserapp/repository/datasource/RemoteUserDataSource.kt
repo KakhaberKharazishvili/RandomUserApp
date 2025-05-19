@@ -33,4 +33,8 @@ class RemoteUserDataSource(
     override suspend fun clearUsers() {
         throw UnsupportedOperationException("Remote source does not support clearUsers")
     }
+
+    override suspend fun insertUsers(users: List<UserEntity>) {
+        throw UnsupportedOperationException("Remote source does not support insertUsers")
+    }
 }

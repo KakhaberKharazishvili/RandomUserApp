@@ -2,11 +2,10 @@ package com.example.randomuserapp.repository
 
 import android.util.Log
 import com.example.randomuserapp.data.db.UserEntity
-import com.example.randomuserapp.repository.datasource.LocalUserDataSource
 import com.example.randomuserapp.repository.datasource.UserDataSource
 
 class UserRepositoryImpl(
-    private val remoteDataSource: UserDataSource, private val localDataSource: LocalUserDataSource
+    private val remoteDataSource: UserDataSource, private val localDataSource: UserDataSource
 ) : UserRepository {
 
     override suspend fun getUsers(page: Int): List<UserEntity> {
@@ -17,7 +16,6 @@ class UserRepositoryImpl(
                 localDataSource.clearUsers()
             }
             localDataSource.insertUsers(users)
-
             users
         } catch (e: Exception) {
             Log.e("UserRepository", "Ошибка при получении пользователей", e)
