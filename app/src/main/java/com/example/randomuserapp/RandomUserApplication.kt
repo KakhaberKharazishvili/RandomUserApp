@@ -1,7 +1,8 @@
 package com.example.randomuserapp
 
 import android.app.Application
-import com.example.randomuserapp.di.appModule
+import com.example.randomuserapp.di.dataModule
+import com.example.randomuserapp.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -11,7 +12,9 @@ class RandomUserApplication : Application() {
 
         startKoin {
             androidContext(this@RandomUserApplication)
-            modules(appModule)
+            modules(
+                dataModule, viewModelModule
+            )
         }
     }
 }

@@ -1,25 +1,29 @@
 package com.example.randomuserapp.di
 
 import androidx.room.Room
+import com.example.randomuserapp.BuildConfig
 import com.example.randomuserapp.data.api.RandomUserApiService
-import com.example.randomuserapp.data.api.RetrofitInstance
 import com.example.randomuserapp.data.db.AppDatabase
 import com.example.randomuserapp.repository.UserRepository
 import com.example.randomuserapp.repository.UserRepositoryImpl
 import com.example.randomuserapp.repository.datasource.LocalUserDataSource
 import com.example.randomuserapp.repository.datasource.RemoteUserDataSource
 import com.example.randomuserapp.repository.datasource.UserDataSource
-import com.example.randomuserapp.viewmodel.UserDetailViewModel
-import com.example.randomuserapp.viewmodel.UserListViewModel
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-val appModule = module {
+val dataModule = module {
+
+    single {
+        Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create()).build()
+    }
 
     single<RandomUserApiService> {
-        RetrofitInstance.api
+        get<Retrofit>().create(RandomUserApiService::class.java)
     }
 
     single {
@@ -43,11 +47,4 @@ val appModule = module {
             remoteDataSource = get(named("remote")), localDataSource = get(named("local"))
         )
     }
-    viewModel {
-        UserListViewModel(get())
-    }
-    viewModel { (userId: Int) ->
-        UserDetailViewModel(get(), userId)
-    }
-
 }
