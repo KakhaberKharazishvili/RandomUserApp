@@ -11,15 +11,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.example.randomuserapp.data.navigation.UserList
 import com.example.randomuserapp.data.navigation.UserDetail
-import com.example.randomuserapp.repository.UserRepository
 import com.example.randomuserapp.ui.screen.UserListScreen
 import com.example.randomuserapp.ui.screen.UserDetailScreen
 import com.example.randomuserapp.ui.theme.RandomUserAppTheme
-import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
-
-    private val userRepository: UserRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
