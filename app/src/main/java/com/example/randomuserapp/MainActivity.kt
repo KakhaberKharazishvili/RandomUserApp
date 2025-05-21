@@ -14,7 +14,9 @@ import com.example.randomuserapp.data.navigation.UserDetail
 import com.example.randomuserapp.ui.screen.UserListScreen
 import com.example.randomuserapp.ui.screen.UserDetailScreen
 import com.example.randomuserapp.ui.theme.RandomUserAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

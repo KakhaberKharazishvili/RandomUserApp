@@ -1,33 +1,33 @@
 package com.example.randomuserapp.ui.screen
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.randomuserapp.R
 import com.example.randomuserapp.data.db.UserEntity
-import com.example.randomuserapp.repository.UserRepository
 import com.example.randomuserapp.viewmodel.UserDetailViewModel
-import com.example.randomuserapp.viewmodel.UserDetailViewModelFactory
+import androidx.hilt.navigation.compose.hiltViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserDetailScreen(userId: Int) {
-    val context = LocalContext.current
-    val viewModel = provideUserDetailViewModel(context, userId)
+    val viewModel: UserDetailViewModel = hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val user = state.user
+
+    LaunchedEffect(userId) {
+        viewModel.loadUser(userId)
+    }
 
     Scaffold(
         topBar = {
@@ -76,13 +76,4 @@ fun Content(user: UserEntity?) {
             Text(text = stringResource(R.string.label_email, user.email))
         }
     }
-}
-
-@Composable
-fun provideUserDetailViewModel(context: Context, userId: Int): UserDetailViewModel {
-    val factory = remember(context, userId) {
-        val repository = UserRepository.getInstance(context)
-        UserDetailViewModelFactory(repository, userId)
-    }
-    return viewModel(factory = factory)
 }
