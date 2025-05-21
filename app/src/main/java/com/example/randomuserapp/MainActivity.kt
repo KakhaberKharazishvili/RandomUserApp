@@ -16,9 +16,11 @@ import com.example.randomuserapp.ui.screen.UserDetailScreen
 import com.example.randomuserapp.ui.theme.RandomUserAppTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             RandomUserAppTheme {
                 RandomUserApp()
