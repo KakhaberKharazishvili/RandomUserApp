@@ -2,8 +2,9 @@ package com.example.randomuserapp.repository.datasource
 
 import com.example.randomuserapp.data.api.RandomUserApiService
 import com.example.randomuserapp.data.db.UserEntity
+import javax.inject.Inject
 
-class RemoteUserDataSource(
+class RemoteUserDataSource @Inject constructor(
     private val apiService: RandomUserApiService
 ) : UserDataSource {
 

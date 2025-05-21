@@ -1,6 +1,6 @@
 package com.example.randomuserapp.ui.screen
 
-import android.content.Context
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -13,19 +13,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.randomuserapp.R
 import com.example.randomuserapp.data.db.UserEntity
-import com.example.randomuserapp.repository.UserRepository
-import com.example.randomuserapp.viewmodel.UserDetailViewModel
-import com.example.randomuserapp.viewmodel.UserDetailViewModelFactory
+import com.example.randomuserapp.viewmodel.UserDetailViewModelEntryPoint
+import dagger.hilt.android.EntryPointAccessors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserDetailScreen(userId: Int) {
     val context = LocalContext.current
-    val viewModel = provideUserDetailViewModel(context, userId)
+
+    val factory = remember {
+        EntryPointAccessors.fromActivity(
+            context as Activity, UserDetailViewModelEntryPoint::class.java
+        ).userDetailViewModelFactory()
+    }
+
+    val viewModel = remember(userId) {
+        factory.create(userId)
+    }
+
     val state by viewModel.state.collectAsStateWithLifecycle()
     val user = state.user
 
@@ -76,13 +84,4 @@ fun Content(user: UserEntity?) {
             Text(text = stringResource(R.string.label_email, user.email))
         }
     }
-}
-
-@Composable
-fun provideUserDetailViewModel(context: Context, userId: Int): UserDetailViewModel {
-    val factory = remember(context, userId) {
-        val repository = UserRepository.getInstance(context)
-        UserDetailViewModelFactory(repository, userId)
-    }
-    return viewModel(factory = factory)
 }

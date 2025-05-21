@@ -2,8 +2,9 @@ package com.example.randomuserapp.repository.datasource
 
 import com.example.randomuserapp.data.db.UserDao
 import com.example.randomuserapp.data.db.UserEntity
+import javax.inject.Inject
 
-class LocalUserDataSource(
+class LocalUserDataSource @Inject constructor(
     private val userDao: UserDao
 ) : UserDataSource {
 

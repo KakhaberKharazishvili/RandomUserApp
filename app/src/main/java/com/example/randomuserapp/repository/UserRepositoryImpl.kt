@@ -2,10 +2,14 @@ package com.example.randomuserapp.repository
 
 import android.util.Log
 import com.example.randomuserapp.data.db.UserEntity
+import com.example.randomuserapp.di.qualifier.LocalDataSource
+import com.example.randomuserapp.di.qualifier.RemoteDataSource
 import com.example.randomuserapp.repository.datasource.UserDataSource
+import javax.inject.Inject
 
-class UserRepositoryImpl(
-    private val remoteDataSource: UserDataSource, private val localDataSource: UserDataSource
+class UserRepositoryImpl @Inject constructor(
+    @RemoteDataSource private val remoteDataSource: UserDataSource,
+    @LocalDataSource private val localDataSource: UserDataSource
 ) : UserRepository {
 
     override suspend fun getUsers(page: Int): List<UserEntity> {
@@ -15,6 +19,7 @@ class UserRepositoryImpl(
             if (page == 1) {
                 localDataSource.clearUsers()
             }
+
             localDataSource.insertUsers(users)
             users
         } catch (e: Exception) {

@@ -3,14 +3,17 @@ package com.example.randomuserapp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.randomuserapp.repository.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserListViewModel(private val repository: UserRepository) : ViewModel() {
+@HiltViewModel
+class UserListViewModel @Inject constructor(private val repository: UserRepository) : ViewModel() {
 
     private val _state = MutableStateFlow(UserListState())
     val state: StateFlow<UserListState> = _state
