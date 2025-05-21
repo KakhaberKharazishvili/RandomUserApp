@@ -28,17 +28,20 @@ import javax.inject.Singleton
 abstract class DataModule {
 
     @Binds
+    @Singleton
     abstract fun bindUserRepository(
         impl: UserRepositoryImpl
     ): UserRepository
 
     @Binds
+    @Singleton
     @RemoteDataSource
     abstract fun bindRemoteUserDataSource(
         impl: RemoteUserDataSource
     ): UserDataSource
 
     @Binds
+    @Singleton
     @LocalDataSource
     abstract fun bindLocalUserDataSource(
         impl: LocalUserDataSource
