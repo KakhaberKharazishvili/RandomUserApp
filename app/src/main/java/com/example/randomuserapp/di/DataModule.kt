@@ -13,53 +13,59 @@ import com.example.randomuserapp.repository.UserRepositoryImpl
 import com.example.randomuserapp.repository.datasource.LocalUserDataSource
 import com.example.randomuserapp.repository.datasource.RemoteUserDataSource
 import com.example.randomuserapp.repository.datasource.UserDataSource
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataModule {
+abstract class DataModule {
 
-    @Provides
-    @Singleton
-    fun provideRetrofit(): Retrofit = Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create()).build()
+    @Binds
+    abstract fun bindUserRepository(
+        impl: UserRepositoryImpl
+    ): UserRepository
 
-    @Provides
-    @Singleton
-    fun provideRandomUserApiService(retrofit: Retrofit): RandomUserApiService =
-        retrofit.create(RandomUserApiService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): AppDatabase = Room.databaseBuilder(
-        context, AppDatabase::class.java, "user_database"
-    ).build()
-
-    @Provides
-    fun provideUserDao(database: AppDatabase): UserDao = database.userDao()
-
-    @Provides
-    @Singleton
+    @Binds
     @RemoteDataSource
-    fun provideRemoteDataSource(api: RandomUserApiService): UserDataSource =
-        RemoteUserDataSource(api)
+    abstract fun bindRemoteUserDataSource(
+        impl: RemoteUserDataSource
+    ): UserDataSource
 
-    @Provides
-    @Singleton
+    @Binds
     @LocalDataSource
-    fun provideLocalDataSource(dao: UserDao): UserDataSource = LocalUserDataSource(dao)
+    abstract fun bindLocalUserDataSource(
+        impl: LocalUserDataSource
+    ): UserDataSource
 
-    @Provides
-    @Singleton
-    fun provideUserRepository(
-        @RemoteDataSource remote: UserDataSource, @LocalDataSource local: UserDataSource
-    ): UserRepository = UserRepositoryImpl(remote, local)
+    companion object {
 
+        @Provides
+        @Singleton
+        fun provideRetrofit(): Retrofit = Retrofit.Builder().baseUrl(BuildConfig.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create()).build()
+
+        @Provides
+        @Singleton
+        fun provideRandomUserApiService(
+            retrofit: Retrofit
+        ): RandomUserApiService = retrofit.create(RandomUserApiService::class.java)
+
+        @Provides
+        @Singleton
+        fun provideDatabase(
+            @ApplicationContext context: Context
+        ): AppDatabase = Room.databaseBuilder(
+            context, AppDatabase::class.java, "user_database"
+        ).build()
+
+        @Provides
+        fun provideUserDao(db: AppDatabase): UserDao = db.userDao()
+    }
 }
